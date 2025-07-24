@@ -1,0 +1,108 @@
+UNITY SCENE HIERARCHY - AFTER EXERCISE 1
+=========================================
+Scene state after completing Exercise 1: Basic UI Foundation
+
+📁 SampleScene
+├── 📷 Main Camera
+│   └── 🔧 Components:
+│       ├── Transform (Position: 0, 0, -10)
+│       ├── Camera (Clear Flags: Skybox, Culling Mask: Everything)
+│       └── Audio Listener
+│
+├── 🔆 Directional Light
+│   └── 🔧 Components:
+│       ├── Transform (Rotation: 50, -30, 0)
+│       └── Light (Type: Directional, Color: White, Intensity: 1)
+│
+├── 🎮 EventSystem
+│   └── 🔧 Components:
+│       ├── Transform (Position: 0, 0, 0)
+│       ├── EventSystem (First Selected: None)
+│       └── StandaloneInputModule (Submit Button: Submit, Cancel Button: Cancel)
+│
+├── 📱 InventoryCanvas
+│   ├── 🔧 Components:
+│   │   ├── RectTransform (Anchors: Stretch, Size Delta: 0,0)
+│   │   ├── Canvas (Render Mode: Screen Space - Overlay, Sort Order: 100)
+│   │   ├── CanvasScaler (UI Scale Mode: Scale With Screen Size)
+│   │   │   ├── Reference Resolution: 1920x1080
+│   │   │   ├── Screen Match Mode: Match Width Or Height
+│   │   │   └── Match: 0.5
+│   │   └── GraphicRaycaster (Ignore Reversed Graphics: true)
+│   │
+│   ├── 📜 InventoryUIManager Script
+│   │   ├── UI References:
+│   │   │   ├── Inventory Canvas: InventoryCanvas
+│   │   │   ├── Inventory Panel: InventoryPanel
+│   │   │   └── Close Button: CloseButton
+│   │   └── Settings:
+│   │       ├── Toggle Key: I
+│   │       └── Panel Size: (800, 600)
+│   │
+│   └── 📦 InventoryPanel (Initially disabled - gets toggled by script)
+│       ├── 🔧 Components:
+│       │   ├── RectTransform
+│       │   │   ├── Anchors: Center (0.5, 0.5)
+│       │   │   ├── Pivot: Center (0.5, 0.5)
+│       │   │   ├── Anchored Position: (0, 0)
+│       │   │   └── Size Delta: (800, 600)
+│       │   └── Image
+│       │       ├── Source Image: None (Background)
+│       │       ├── Color: (0.2, 0.2, 0.2, 0.9) - Dark Gray with transparency
+│       │       └── Raycast Target: true
+│       │
+│       └── ❌ CloseButton
+│           ├── 🔧 Components:
+│           │   ├── RectTransform
+│           │   │   ├── Anchors: Top Right
+│           │   │   ├── Anchored Position: (-15, -15)
+│           │   │   └── Size Delta: (30, 30)
+│           │   ├── Image (Button Background)
+│           │   │   ├── Color: (1, 1, 1, 1) - White
+│           │   │   └── Raycast Target: true
+│           │   └── Button
+│           │       ├── Target Graphic: Image
+│           │       ├── Interactable: true
+│           │       └── OnClick(): InventoryUIManager.CloseInventory()
+│           │
+│           └── 📝 Text
+│               └── 🔧 Components:
+│                   ├── RectTransform (Anchors: Stretch, Offsets: 0,0,0,0)
+│                   └── Text
+│                       ├── Text: "X"
+│                       ├── Font: Arial
+│                       ├── Font Size: 14
+│                       ├── Color: (0, 0, 0, 1) - Black
+│                       └── Alignment: Middle Center
+│
+└── 📂 InventorySubScene
+    └── 🔧 Components:
+        ├── Transform (Position: 0, 0, 0)
+        └── SubScene
+            ├── Scene Asset: InventorySubScene.unity
+            ├── Auto Load Scene: true
+            └── (Currently empty - will be used in Exercise 5)
+
+TESTING FUNCTIONALITY:
+======================
+After Exercise 1, the following should work:
+- ✅ Press 'I' key to toggle inventory panel visibility (multiple times)
+- ✅ Click close button (X) to close inventory
+- ✅ Panel appears centered on screen
+- ✅ Canvas stays active at all times (only panel gets disabled/enabled)
+- ✅ Canvas scales properly on different screen sizes
+- ✅ Cursor becomes visible when inventory is open
+- ✅ Cursor locks when inventory is closed
+
+IMPORTANT: The Canvas must stay active at all times so the script can listen for input.
+Only the InventoryPanel should be disabled/enabled for show/hide functionality.
+
+EXERCISE 1 SUCCESS CRITERIA:
+============================
+- ✅ Canvas scales properly on different resolutions
+- ✅ Inventory panel is centered and properly sized
+- ✅ Background is semi-transparent dark color
+- ✅ 'I' key toggles inventory visibility
+- ✅ Close button works correctly
+- ✅ EventSystem is present for UI interactions
+- ✅ Subscene is created (empty) for future ECS integration

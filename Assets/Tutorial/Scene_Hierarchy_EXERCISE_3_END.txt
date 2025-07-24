@@ -1,0 +1,173 @@
+UNITY SCENE HIERARCHY - AFTER EXERCISE 3
+=========================================
+Scene state after completing Exercise 3: Item Slot Components
+
+📁 SampleScene
+├── 📷 Main Camera
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🔆 Directional Light
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🎮 EventSystem
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🎛️ Manager (NEW IN EXERCISE 3)
+│   ├── 🔧 Components:
+│   │   └── Transform (Position: 0, 0, 0)
+│   │
+│   └── 📜 SlotStateManager Script
+│       ├── Slot Management:
+│       │   ├── All Slots: (Auto-populated with all ItemSlotUI components)
+│       │   └── Selected Slot: null (Runtime variable)
+│       └── Test Items: (Auto-generated test item data)
+│           ├── [0] Health Potion (ID:1, Stack:10, Type:Consumable)
+│           ├── [1] Iron Sword (ID:2, Stack:1, Type:Weapon)
+│           ├── [2] Wood (ID:3, Stack:99, Type:Material)
+│           └── [3] Leather Armor (ID:4, Stack:1, Type:Armor)
+│
+├── 📱 InventoryCanvas
+│   ├── 🔧 Components: [Same as previous exercises]
+│   ├── 📜 InventoryUIManager Script: [Same as previous exercises]
+│   │
+│   └── 📦 InventoryPanel (Disabled by default - toggled by InventoryUIManager)
+│       ├── 🔧 Components: [Same as previous exercises]
+│       ├── ❌ CloseButton: [Same as previous exercises]
+│       │
+│       └── 📊 GridContainer
+│           ├── 🔧 Components: [Same as Exercise 2]
+│           ├── 📜 InventoryGridManager Script: [Same as Exercise 2]
+│           │
+│           ├── 🔲 Slot_0_0 (ENHANCED IN EXERCISE 3)
+│           │   ├── 🔧 Components:
+│           │   │   ├── RectTransform: [Same as Exercise 2]
+│           │   │   ├── Image (Background)
+│           │   │   │   ├── Color: (0.3, 0.3, 0.3, 0.8) - Empty state
+│           │   │   │   └── Raycast Target: true
+│           │   │   ├── Button
+│           │   │   │   ├── Target Graphic: null (Prevents UI blocking)
+│           │   │   │   └── Interactable: true
+│           │   │   ├── CanvasGroup (Auto-created)
+│           │   │   │   ├── Alpha: 1
+│           │   │   │   ├── Interactable: true
+│           │   │   │   └── Blocks Raycasts: true
+│           │   │   └── SlotIndex: [Same as Exercise 2]
+│           │   │
+│           │   ├── 📜 ItemSlotUI Script (NEW)
+│           │   │   ├── Slot Configuration:
+│           │   │   │   ├── Current State: Empty
+│           │   │   │   └── Slot Index: 0
+│           │   │   ├── Visual Components:
+│           │   │   │   ├── Background Image: (Reference to slot's Image)
+│           │   │   │   ├── Item Image: ItemImage child object
+│           │   │   │   ├── Stack Count Text: StackCount child object
+│           │   │   │   └── Highlight Image: Highlight child object
+│           │   │   ├── State Colors:
+│           │   │   │   ├── Empty Color: (0.3, 0.3, 0.3, 0.8)
+│           │   │   │   ├── Occupied Color: (0.4, 0.4, 0.4, 0.8)
+│           │   │   │   ├── Highlight Color: (0.6, 0.6, 0.6, 0.8)
+│           │   │   │   └── Selected Color: (0.8, 0.8, 0.2, 0.8)
+│           │   │   ├── Item Data:
+│           │   │   │   ├── Current Item: null
+│           │   │   │   └── Stack Count: 0
+│           │   │   └── Drag Settings:
+│           │   │       ├── Is Draggable: true
+│           │   │       └── Drag Alpha: 0.6
+│           │   │
+│           │   ├── 🖼️ ItemImage (Auto-created child)
+│           │   │   └── 🔧 Components:
+│           │   │       ├── RectTransform
+│           │   │       │   ├── Anchors: Stretch (0,0,1,1)
+│           │   │       │   ├── Offsets: 4px margin on all sides
+│           │   │       │   └── Size Delta: (0, 0)
+│           │   │       └── Image
+│           │   │           ├── Source Image: null (Item icon goes here)
+│           │   │           ├── Color: Clear (transparent when empty)
+│           │   │           └── Raycast Target: false
+│           │   │
+│           │   ├── 📝 StackCount (Auto-created child)
+│           │   │   └── 🔧 Components:
+│           │   │       ├── RectTransform
+│           │   │       │   ├── Anchors: Bottom-Right
+│           │   │       │   ├── Anchored Position: (-2, -2)
+│           │   │       │   └── Size Delta: (20, 15)
+│           │   │       └── Text
+│           │   │           ├── Text: "1" (when stackCount > 1)
+│           │   │           ├── Font: Arial
+│           │   │           ├── Font Size: 12
+│           │   │           ├── Color: White
+│           │   │           ├── Alignment: Lower Right
+│           │   │           └── Raycast Target: false
+│           │   │
+│           │   └── ✨ Highlight (Auto-created child)
+│           │       └── 🔧 Components:
+│           │           ├── RectTransform (Anchors: Stretch, fills entire slot)
+│           │           └── Image
+│           │               ├── Source Image: None
+│           │               ├── Color: (1, 1, 1, 0.2) - White with transparency
+│           │               ├── Raycast Target: false
+│           │               └── Active: false (only visible on hover)
+│           │
+│           ├── 🔲 Slot_1_0 (ENHANCED)
+│           │   └── 🔧 Components: [Same structure as Slot_0_0]
+│           │       ├── All same components and children
+│           │       ├── ItemSlotUI Script with Slot Index: 1
+│           │       └── SlotIndex: X:1, Y:0
+│           │
+│           ├── 🔲 Slot_2_0 (ENHANCED)
+│           │   └── 🔧 Components: [Same structure with Slot Index: 2]
+│           │
+│           └── ... (All 50 slots now have enhanced ItemSlotUI structure)
+│               ├── Each slot has ItemSlotUI script component
+│               ├── Each slot has ItemImage, StackCount, Highlight children
+│               ├── Each slot has proper event handling (click, hover, drag)
+│               └── Each slot can display items with visual feedback
+│
+└── 📂 InventorySubScene
+    └── 🔧 Components: [Same as previous exercises - still empty]
+
+TESTING FUNCTIONALITY:
+======================
+After Exercise 3, the following should work:
+- ✅ All previous exercise functionality still works
+- ✅ Slots show different colors for each state:
+  - Empty: Dark gray (0.3, 0.3, 0.3, 0.8)
+  - Occupied: Medium gray (0.4, 0.4, 0.4, 0.8)
+  - Highlighted: Light gray (0.6, 0.6, 0.6, 0.8)
+  - Selected: Yellow tint (0.8, 0.8, 0.2, 0.8)
+- ✅ Hover effects work smoothly (highlight overlay appears)
+- ✅ Click to select/deselect functionality
+- ✅ Stack count displays correctly for stackable items (>1)
+- ✅ Keyboard shortcuts work:
+  - Press '1': Add test items to first 4 slots
+  - Press '2': Add 5 health potions to first slot (stacking test)
+  - Press '3': Clear all slots
+  - Press '4': Set up drag & drop test scenario
+
+EXERCISE 3 SUCCESS CRITERIA:
+============================
+- ✅ Slots show different colors for each state
+- ✅ Hover effects work smoothly with highlight overlay
+- ✅ Click to select/deselect functionality works
+- ✅ Stack count displays correctly for stackable items
+- ✅ Items can be added and cleared properly
+- ✅ All 50 slots have complete ItemSlotUI functionality
+- ✅ Event system properly handles slot interactions
+- ✅ Visual feedback is consistent across all slots
+
+ITEM DATA STRUCTURE:
+====================
+Test items created by SlotStateManager:
+1. Health Potion (ID:1, Max Stack:10, Type:Consumable)
+2. Iron Sword (ID:2, Max Stack:1, Type:Weapon)  
+3. Wood (ID:3, Max Stack:99, Type:Material)
+4. Leather Armor (ID:4, Max Stack:1, Type:Armor)
+
+VISUAL STATE SYSTEM:
+====================
+Each slot can display these states:
+- Empty: No item, dark gray background
+- Occupied: Has item, medium gray background, shows item icon
+- Highlighted: Mouse hover, shows white highlight overlay
+- Selected: Clicked, shows yellow tint background
+- Stacked: Shows stack count number in bottom-right corner

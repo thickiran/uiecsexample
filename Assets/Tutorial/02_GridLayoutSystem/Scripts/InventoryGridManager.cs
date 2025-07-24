@@ -1,0 +1,241 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InventoryGridManager : MonoBehaviour
+    {
+        [Header("Grid Configuration")]
+        public int gridWidth = 10;
+        public int gridHeight = 5;
+        public Vector2 cellSize = new Vector2(64, 64);
+        public Vector2 spacing = new Vector2(2, 2);
+        
+        [Header("UI References")]
+        public RectTransform gridParent;
+        [Tooltip("Assign the slot prefab you created manually. If empty, script will auto-generate a default one.")]
+        public GameObject slotPrefab;
+        
+        [Header("ECS Integration")]
+        [Tooltip("When true, skips slot creation to let ECS system handle it. Auto-detected in Exercise 5.")]
+        public bool skipSlotCreationForECS = false;
+        
+        private GridLayoutGroup gridLayoutGroup;
+        private ContentSizeFitter contentSizeFitter;
+        private GameObject[,] slotGrid;
+        
+        void Start()
+        {
+            DetectECSComponents();
+            SetupGridLayout();
+            
+            if (!skipSlotCreationForECS)
+            {
+                CreateSlots();
+                Debug.Log("InventoryGridManager: Created slots for Exercises 1-4");
+            }
+            else
+            {
+                Debug.Log("InventoryGridManager: Skipped slot creation - ECS system detected (Exercise 5)");
+            }
+        }
+        
+        void DetectECSComponents()
+        {
+            // Auto-detect if ECS components are present in the scene
+            var inventoryDataUpdater = FindObjectOfType<InventoryDataUpdater>();
+            var inventoryUIBridge = FindObjectOfType<InventoryUIBridge>();
+            
+            Debug.Log($"InventoryGridManager: Detecting ECS components - InventoryDataUpdater: {(inventoryDataUpdater != null ? "Found" : "Not Found")}, InventoryUIBridge: {(inventoryUIBridge != null ? "Found" : "Not Found")}");
+            
+            if (inventoryDataUpdater != null || inventoryUIBridge != null)
+            {
+                skipSlotCreationForECS = true;
+                Debug.Log("InventoryGridManager: ECS components detected - will skip slot creation");
+            }
+            else
+            {
+                Debug.Log("InventoryGridManager: No ECS components detected - will create slots normally");
+            }
+        }
+        
+        void SetupGridLayout()
+        {
+            if (gridParent == null)
+            {
+                Debug.LogError("Grid parent not assigned!");
+                return;
+            }
+            
+            // Add Grid Layout Group component
+            gridLayoutGroup = gridParent.GetComponent<GridLayoutGroup>();
+            if (gridLayoutGroup == null)
+            {
+                gridLayoutGroup = gridParent.gameObject.AddComponent<GridLayoutGroup>();
+            }
+            
+            // Configure grid layout
+            gridLayoutGroup.cellSize = cellSize;
+            gridLayoutGroup.spacing = spacing;
+            gridLayoutGroup.startCorner = GridLayoutGroup.Corner.UpperLeft;
+            gridLayoutGroup.startAxis = GridLayoutGroup.Axis.Horizontal;
+            gridLayoutGroup.childAlignment = TextAnchor.MiddleCenter;
+            gridLayoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            gridLayoutGroup.constraintCount = gridWidth;
+            
+            // Add Content Size Fitter for automatic sizing
+            contentSizeFitter = gridParent.GetComponent<ContentSizeFitter>();
+            if (contentSizeFitter == null)
+            {
+                contentSizeFitter = gridParent.gameObject.AddComponent<ContentSizeFitter>();
+            }
+            
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+        
+        void CreateSlots()
+        {
+            // Check if student assigned their custom prefab in Inspector
+            if (slotPrefab == null)
+            {
+                // Fallback: Create default slot if no prefab assigned
+                // Students should create their own prefab as per Exercise instructions
+                CreateDefaultSlot();
+            }
+            
+            slotGrid = new GameObject[gridWidth, gridHeight];
+            
+            // Clear existing slots
+            for (int i = gridParent.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(gridParent.GetChild(i).gameObject);
+            }
+            
+            // Generate slots using nested loops (10 width × 5 height = 50 total slots)
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int x = 0; x < gridWidth; x++)
+                {
+                    // Instantiate student's prefab (or auto-generated default)
+                    GameObject slot = Instantiate(slotPrefab, gridParent);
+                    slot.name = $"Slot_{x}_{y}";
+                    
+                    // Store reference in 2D array for easy access
+                    slotGrid[x, y] = slot;
+                    
+                    // Ensure ItemSlotUI component is present (for Exercise 3+)
+                    var itemSlotUI = slot.GetComponent<ItemSlotUI>();
+                    if (itemSlotUI == null)
+                    {
+                        itemSlotUI = slot.AddComponent<ItemSlotUI>();
+                        Debug.Log($"Added ItemSlotUI component to {slot.name}");
+                    }
+                    
+                    // Add SlotIndex component to track grid position
+                    var slotIndex = slot.GetComponent<SlotIndex>();
+                    if (slotIndex == null)
+                    {
+                        slotIndex = slot.AddComponent<SlotIndex>();
+                    }
+                    slotIndex.x = x;
+                    slotIndex.y = y;
+                }
+            }
+        }
+        
+        void CreateDefaultSlot()
+        {
+            // FALLBACK: Auto-generate default slot prefab
+            // This runs only if student didn't assign their custom prefab
+            // Students should follow Exercise instructions to create their own prefab
+            slotPrefab = new GameObject("DefaultSlot");
+            var rectTransform = slotPrefab.AddComponent<RectTransform>();
+            rectTransform.sizeDelta = cellSize;
+            
+            // Add Image component for background
+            var image = slotPrefab.AddComponent<Image>();
+            image.color = new Color(0.3f, 0.3f, 0.3f, 0.8f);
+            
+            // Add outline
+            var outline = slotPrefab.AddComponent<Outline>();
+            outline.effectColor = Color.white;
+            outline.effectDistance = new Vector2(1, 1);
+            
+            // Add Button component for interaction
+            var button = slotPrefab.AddComponent<Button>();
+            button.targetGraphic = image;
+            
+            // Color transition on hover
+            var colors = button.colors;
+            colors.highlightedColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+            colors.pressedColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+            button.colors = colors;
+        }
+        
+        public void UpdateGridSize(int width, int height)
+        {
+            gridWidth = width;
+            gridHeight = height;
+            
+            if (gridLayoutGroup != null)
+            {
+                gridLayoutGroup.constraintCount = gridWidth;
+            }
+            
+            CreateSlots();
+        }
+        
+        public void UpdateCellSize(Vector2 newCellSize)
+        {
+            cellSize = newCellSize;
+            
+            if (gridLayoutGroup != null)
+            {
+                gridLayoutGroup.cellSize = cellSize;
+            }
+        }
+        
+        public void UpdateSpacing(Vector2 newSpacing)
+        {
+            spacing = newSpacing;
+            
+            if (gridLayoutGroup != null)
+            {
+                gridLayoutGroup.spacing = spacing;
+            }
+        }
+        
+        public GameObject GetSlot(int x, int y)
+        {
+            if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight)
+            {
+                return slotGrid[x, y];
+            }
+            return null;
+        }
+        
+        public Vector2Int GetGridSize()
+        {
+            return new Vector2Int(gridWidth, gridHeight);
+        }
+        
+        // Helper method for students to test grid modifications
+        public void TestGridConfiguration()
+        {
+            Debug.Log($"Grid Size: {gridWidth}x{gridHeight}");
+            Debug.Log($"Cell Size: {cellSize}");
+            Debug.Log($"Spacing: {spacing}");
+            Debug.Log($"Total Slots: {gridWidth * gridHeight}");
+        }
+    }
+    
+    // Helper component to identify slot positions
+    public class SlotIndex : MonoBehaviour
+    {
+        public int x;
+        public int y;
+        
+        public Vector2Int GetPosition()
+        {
+            return new Vector2Int(x, y);
+        }
+    }

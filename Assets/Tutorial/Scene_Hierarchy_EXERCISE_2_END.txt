@@ -1,0 +1,130 @@
+UNITY SCENE HIERARCHY - AFTER EXERCISE 2
+=========================================
+Scene state after completing Exercise 2: Grid Layout System
+
+📁 SampleScene
+├── 📷 Main Camera
+│   └── 🔧 Components: [Same as Exercise 1]
+│
+├── 🔆 Directional Light
+│   └── 🔧 Components: [Same as Exercise 1]
+│
+├── 🎮 EventSystem
+│   └── 🔧 Components: [Same as Exercise 1]
+│
+├── 📱 InventoryCanvas
+│   ├── 🔧 Components: [Same as Exercise 1]
+│   ├── 📜 InventoryUIManager Script: [Same as Exercise 1]
+│   │
+│   └── 📦 InventoryPanel (Disabled by default - toggled by InventoryUIManager)
+│       ├── 🔧 Components: [Same as Exercise 1]
+│       ├── ❌ CloseButton: [Same as Exercise 1]
+│       │
+│       └── 📊 GridContainer (NEW IN EXERCISE 2)
+│           ├── 🔧 Components:
+│           │   ├── RectTransform
+│           │   │   ├── Anchors: Stretch (0,0,1,1)
+│           │   │   ├── Anchored Position: (0, 0)
+│           │   │   ├── Size Delta: (0, 0)
+│           │   │   └── Offsets: Left:20, Top:-20, Right:-20, Bottom:20
+│           │   ├── GridLayoutGroup
+│           │   │   ├── Cell Size: (64, 64)
+│           │   │   ├── Spacing: (2, 2)
+│           │   │   ├── Start Corner: Upper Left
+│           │   │   ├── Start Axis: Horizontal
+│           │   │   ├── Child Alignment: Middle Center
+│           │   │   ├── Constraint: Fixed Column Count
+│           │   │   └── Constraint Count: 10
+│           │   └── ContentSizeFitter
+│           │       ├── Horizontal Fit: Preferred Size
+│           │       └── Vertical Fit: Preferred Size
+│           │
+│           ├── 📜 InventoryGridManager Script
+│           │   ├── Grid Configuration:
+│           │   │   ├── Grid Width: 10
+│           │   │   ├── Grid Height: 5
+│           │   │   ├── Cell Size: (64, 64)
+│           │   │   └── Spacing: (2, 2)
+│           │   └── UI References:
+│           │       ├── Grid Parent: GridContainer
+│           │       └── Slot Prefab: StudentSlot.prefab (created by student)
+│           │
+│           ├── 🔲 Slot_0_0 (Generated from StudentSlot.prefab)
+│           │   └── 🔧 Components:
+│           │       ├── RectTransform
+│           │       │   ├── Size Delta: (64, 64) - Matches cellSize
+│           │       │   ├── Anchors: Center (0.5, 0.5)
+│           │       │   └── Pivot: Center (0.5, 0.5)
+│           │       ├── Image (Background - Student Created)
+│           │       │   ├── Color: (0.3, 0.3, 0.3, 0.8) - Gray with transparency
+│           │       │   ├── Source Image: None (solid color)
+│           │       │   └── Raycast Target: true
+│           │       ├── Outline (Border - Student Created)
+│           │       │   ├── Effect Color: White (1, 1, 1, 1)
+│           │       │   └── Effect Distance: (1, 1)
+│           │       ├── Button (Interactions - Student Created)
+│           │       │   ├── Target Graphic: Image (assigned by student)
+│           │       │   ├── Colors:
+│           │       │   │   ├── Normal: (0.3, 0.3, 0.3, 0.8)
+│           │       │   │   ├── Highlighted: (0.5, 0.5, 0.5, 0.8)
+│           │       │   │   └── Pressed: (0.2, 0.2, 0.2, 0.8)
+│           │       │   └── Interactable: true
+│           │       └── SlotIndex (Auto-added by script)
+│           │           ├── X: 0
+│           │           └── Y: 0
+│           │
+│           ├── 🔲 Slot_1_0 (Generated from StudentSlot.prefab)
+│           │   └── 🔧 Components: [Same structure as Slot_0_0, with SlotIndex X:1, Y:0]
+│           │
+│           ├── 🔲 Slot_2_0 (Generated from StudentSlot.prefab)
+│           │   └── 🔧 Components: [Same structure, with SlotIndex X:2, Y:0]
+│           │
+│           ├── ... (Slots 3_0 through 9_0 - Same prefab structure)
+│           │
+│           ├── 🔲 Slot_0_1 (Generated from StudentSlot.prefab)
+│           │   └── 🔧 Components: [Same structure, with SlotIndex X:0, Y:1]
+│           │
+│           └── ... (Total of 50 slots: 10 columns × 5 rows)
+│               └── All generated from StudentSlot.prefab with unique SlotIndex coordinates
+│
+└── 📂 InventorySubScene
+    └── 🔧 Components: [Same as Exercise 1 - still empty]
+
+TESTING FUNCTIONALITY:
+======================
+After Exercise 2, the following should work:
+- ✅ All Exercise 1 functionality still works
+- ✅ 50 inventory slots arranged in 10x5 grid
+- ✅ Slots have consistent 64x64 size with 2px spacing
+- ✅ Grid container auto-sizes to fit all slots
+- ✅ Slots show hover effects (lighter gray on mouse over)
+- ✅ Grid layout adapts when parameters are changed
+- ✅ All slots are properly named (Slot_X_Y format)
+
+EXERCISE 2 SUCCESS CRITERIA:
+============================
+- ✅ Grid displays 10 columns and 5 rows (50 total slots)
+- ✅ Slots are evenly spaced with 2px gaps
+- ✅ Container auto-sizes to fit all slots perfectly
+- ✅ Hover effects work on individual slots
+- ✅ Grid adapts when size parameters are changed
+- ✅ Proper slot indexing system (SlotIndex component)
+- ✅ Clean, organized hierarchy with proper naming
+
+GRID LAYOUT DETAILS:
+====================
+- Total Slots: 50 (10 width × 5 height)
+- Each Slot: 64×64 pixels (from StudentSlot.prefab)
+- Spacing: 2px between slots
+- Total Grid Size: 658×330 pixels (including spacing)
+- Layout Direction: Horizontal first, then vertical
+- Start Position: Upper Left corner
+
+STUDENT PREFAB STRUCTURE:
+=========================
+StudentSlot.prefab should contain:
+├── RectTransform (64x64 size, center anchors/pivot)
+├── Image (Gray background, no source image)  
+├── Outline (White border, 1px distance)
+├── Button (Image as target graphic, hover colors)
+└── SlotIndex (Auto-added by script during generation)

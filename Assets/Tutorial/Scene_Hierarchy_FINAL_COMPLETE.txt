@@ -1,0 +1,264 @@
+UNITY SCENE HIERARCHY - FINAL COMPLETE STATE
+============================================
+Scene state after completing ALL exercises (1-5): Full DOTS Inventory System
+
+📁 SampleScene
+├── 📷 Main Camera
+│   └── 🔧 Components: [Same as all previous exercises]
+│
+├── 🔆 Directional Light
+│   └── 🔧 Components: [Same as all previous exercises]
+│
+├── 🎮 EventSystem
+│   └── 🔧 Components: [Same as all previous exercises]
+│
+├── 🎛️ Manager
+│   ├── 🔧 Components: [Same as previous exercises]
+│   │
+│   └── 📜 SlotStateManager Script: [Same as Exercise 4]
+│
+├── 🎮 InventoryUIBridge (NEW IN EXERCISE 5)
+│   ├── 🔧 Components:
+│   │   └── Transform (Position: 0, 0, 0)
+│   │
+│   └── 📜 InventoryUIBridge Script (ECS-UI BRIDGE)
+│       ├── Bridge Configuration:
+│       │   ├── Inventory Entity: (Runtime - assigned by InventoryDataUpdater)
+│       │   ├── Slot Container: GridContainer
+│       │   ├── Slot Prefab: (Reference to slot prefab)
+│       │   └── Is Initialized: false (becomes true when inventory entity assigned)
+│       │
+│       ├── ECS Integration:
+│       │   ├── Entity Manager Reference: (Runtime from World.DefaultGameObjectInjectionWorld)
+│       │   ├── World Reference: (Runtime)
+│       │   └── UI Slot References: (Auto-populated during initialization)
+│       │
+│       └── Bridge Methods:
+│           ├── Initialize(Entity) - Links to ECS inventory entity created by InventoryDataUpdater
+│           ├── UpdateSlot(int, InventorySlot, ItemDataComponent) - Updates UI from ECS data
+│           ├── ClearSlot(int) - Clears specific slot UI
+│           ├── OnInventoryChanged(InventoryChangedEvent) - Handles ECS change events
+│           └── IsInitialized() - Returns bridge initialization status
+│
+├── 📊 InventoryDataUpdater (NEW IN EXERCISE 5)
+│   ├── 🔧 Components:
+│   │   └── Transform (Position: 0, 0, 0)
+│   │
+│   └── 📜 InventoryDataUpdater Script (ECS DATA MANAGER & SUBSCENE BRIDGE)
+│       ├── ECS References:
+│       │   ├── Entity Manager: (Runtime from World.DefaultGameObjectInjectionWorld)
+│       │   ├── Player Inventory Entity: (Created at runtime by CreatePlayerInventory())
+│       │   └── SubScene ItemData Entities: (Found via FindSubSceneItemData())
+│       │
+│       ├── SubScene ItemData Cache:
+│       │   ├── Health Potion Entity: (Runtime reference to SubScene-baked entity)
+│       │   ├── Iron Sword Entity: (Runtime reference to SubScene-baked entity)
+│       │   ├── Wood Entity: (Runtime reference to SubScene-baked entity)
+│       │   └── Leather Armor Entity: (Runtime reference to SubScene-baked entity)
+│       │
+│       ├── Initialization Methods:
+│       │   ├── InitializeECS() - Sets up ECS world connection
+│       │   ├── CreatePlayerInventory() - Creates runtime inventory entity
+│       │   ├── FindSubSceneItemData() - Discovers ItemData entities from SubScene
+│       │   └── GetItemData(int itemId) - Helper to find ItemData by ID
+│       │
+│       └── Runtime Methods:
+│           ├── AddItemToSlot(int itemId, int quantity, int slotIndex) - With max stack validation
+│           ├── RemoveItemFromSlot(int slotIndex, int quantity)
+│           ├── ClearInventory() - Clears all slots
+│           ├── FillInventoryWithTestItems() - Adds sample items
+│           └── Keyboard Input Handlers (1-6 keys) - Uses SubScene ItemData for validation
+│
+├── 📱 InventoryCanvas
+│   ├── 🔧 Components: [Same as all previous exercises]
+│   ├── 📜 InventoryUIManager Script: [Same as all previous exercises]
+│   │
+│   └── 📦 InventoryPanel (Disabled by default - toggled by InventoryUIManager)
+│       ├── 🔧 Components: [Same as all previous exercises]
+│       ├── ❌ CloseButton: [Same as all previous exercises]
+│       │
+│       └── 📊 GridContainer
+│           ├── 🔧 Components: [Same as previous exercises]
+│           ├── 📜 InventoryGridManager Script: [Same as previous exercises]
+│           │
+│           ├── 🔲 Slot_0_0 (FULL ECS INTEGRATION)
+│           │   ├── 🔧 Components:
+│           │   │   ├── RectTransform: [Same as Exercise 4]
+│           │   │   ├── Image (Background): [Same as Exercise 4]
+│           │   │   ├── Button: [Same as Exercise 4]
+│           │   │   ├── CanvasGroup: [Same as Exercise 4]
+│           │   │   └── SlotIndex: [Same as Exercise 4]
+│           │   │
+│           │   ├── 📜 ItemSlotUI Script: [Same as Exercise 4 - Full drag & drop]
+│           │   │
+│           │   ├── 📜 UISlotReference Script (NEW IN EXERCISE 5)
+│           │   │   ├── ECS Integration:
+│           │   │   │   ├── Slot Index: 0
+│           │   │   │   ├── Inventory Entity: (Runtime reference)
+│           │   │   │   ├── Is Synced: false (becomes true when ECS connected)
+│           │   │   │   └── Last Update Time: (Runtime)
+│           │   │   │
+│           │   │   ├── Bridge Methods:
+│           │   │   │   ├── SyncFromECS(InventorySlot, ItemDataComponent)
+│           │   │   │   ├── SyncToECS() - Sends UI changes to ECS
+│           │   │   │   ├── OnItemChanged() - Handles UI item changes
+│           │   │   │   └── CreateMoveRequest(int targetSlot) - ECS move requests
+│           │   │   │
+│           │   │   └── Event Handlers:
+│           │   │       ├── OnSlotDragStart() - Creates ECS drag event
+│           │   │       ├── OnSlotDrop() - Creates ECS move request
+│           │   │       └── OnSlotUpdate() - Syncs with ECS data
+│           │   │
+│           │   ├── 🖼️ ItemImage: [Same as previous exercises]
+│           │   ├── 📝 StackCount: [Same as previous exercises]
+│           │   └── ✨ Highlight: [Same as previous exercises]
+│           │
+│           ├── 🔲 Slot_1_0 (FULL ECS INTEGRATION)
+│           │   └── 🔧 Components: [Same structure as Slot_0_0]
+│           │       ├── All previous functionality
+│           │       ├── UISlotReference with Slot Index: 1
+│           │       └── Full ECS synchronization
+│           │
+│           ├── 🔲 Slot_2_0 (FULL ECS INTEGRATION)
+│           │   └── 🔧 Components: [Same structure with Slot Index: 2]
+│           │
+│           └── ... (All 50 slots now have complete ECS integration)
+│               ├── Each slot has UISlotReference component
+│               ├── Each slot syncs with ECS inventory data
+│               ├── Each slot can create ECS requests (move, pickup, drop)
+│               ├── Each slot receives real-time updates from ECS
+│               └── Each slot maintains UI-ECS data consistency
+│
+└── 📂 InventorySubScene (CONTAINS AUTHORING GAMEOBJECTS)
+    ├── 🔧 Components:
+    │   ├── Transform (Position: 0, 0, 0)
+    │   └── SubScene
+    │       ├── Scene Asset: InventorySubScene.unity
+    │       ├── Auto Load Scene: true
+    │       └── Is Loaded: true
+    │
+    ├── 📦 ItemData_HealthPotion (GAMEOBJECT WITH AUTHORING)
+    │   ├── 🔧 Transform (Position: 0, 0, 0)
+    │   └── 📜 ItemDataAuthoring Component
+    │       ├── Item ID: 1
+    │       ├── Item Name: "Health Potion"
+    │       ├── Max Stack Size: 10
+    │       ├── Item Type: Consumable
+    │       └── Value: 50
+    │
+    ├── 📦 ItemData_IronSword (GAMEOBJECT WITH AUTHORING)
+    │   ├── 🔧 Transform (Position: 0, 0, 0)
+    │   └── 📜 ItemDataAuthoring Component
+    │       ├── Item ID: 2
+    │       ├── Item Name: "Iron Sword"
+    │       ├── Max Stack Size: 1
+    │       ├── Item Type: Weapon
+    │       └── Value: 200
+    │
+    ├── 📦 ItemData_Wood (GAMEOBJECT WITH AUTHORING)
+    │   ├── 🔧 Transform (Position: 0, 0, 0)
+    │   └── 📜 ItemDataAuthoring Component
+    │       ├── Item ID: 3
+    │       ├── Item Name: "Wood"
+    │       ├── Max Stack Size: 99
+    │       ├── Item Type: Material
+    │       └── Value: 5
+    │
+    └── 📦 ItemData_LeatherArmor (GAMEOBJECT WITH AUTHORING)
+        ├── 🔧 Transform (Position: 0, 0, 0)
+        └── 📜 ItemDataAuthoring Component
+            ├── Item ID: 4
+            ├── Item Name: "Leather Armor"
+            ├── Max Stack Size: 1
+            ├── Item Type: Armor
+            └── Value: 150
+
+ECS-UI DATA FLOW:
+=================
+
+1. SUBSCENE INITIALIZATION:
+   - ItemDataAuthoring GameObjects in SubScene bake into ECS ItemData entities at build/play time
+   - InventoryDataUpdater.FindSubSceneItemData() queries for and caches these entities
+   - ItemData entities provide max stack sizes and item properties for validation
+
+2. RUNTIME INVENTORY CREATION:
+   - InventoryDataUpdater.CreatePlayerInventory() creates runtime inventory entity
+   - InventoryUIBridge.Initialize() is called with the new inventory entity
+   - Bridge connects ECS inventory data to UI slot components
+
+3. ECS → UI UPDATES:
+   - User presses keyboard keys (1-6) → InventoryDataUpdater.AddItemToSlot()
+   - Method validates against SubScene ItemData (max stack size, item properties)
+   - ECS inventory buffer is updated with proper validation
+   - InventoryChangedEvent is created
+   - InventoryUISystem processes event and calls InventoryUIBridge.UpdateSlot()
+   - UI slots update their visual representation
+
+4. UI → ECS REQUESTS:
+   - User drags item between slots
+   - ItemSlotUI creates ItemMoveRequest ECS entity
+   - InventoryManagementSystem processes the request using SubScene ItemData for validation
+   - System updates ECS inventory data
+   - InventoryChangedEvent is created
+   - UI receives update and syncs visual state
+
+5. DATA VALIDATION FLOW:
+   - All item operations validate against SubScene ItemData entities
+   - Max stack sizes enforced from ItemDataAuthoring components
+   - Item properties (name, type, value) sourced from SubScene data
+   - Consistent validation whether triggered by keyboard or drag-drop
+
+TESTING FUNCTIONALITY (FINAL):
+==============================
+After all exercises, the following should work:
+- ✅ All previous functionality (UI, grid, slots, drag & drop)
+- ✅ ECS components compile without errors
+- ✅ SubScene ItemData GameObjects with ItemDataAuthoring components created
+- ✅ Console shows "Found X ItemData entities in SubScene" message on play
+- ✅ InventoryDataUpdater successfully finds and caches SubScene ItemData entities
+- ✅ UI bridge initializes with runtime ECS inventory entity
+- ✅ Real-time synchronization works both ways (ECS ↔ UI)
+- ✅ Max stack size validation enforced from SubScene ItemData:
+  - Health Potion: Cannot exceed 10 per slot
+  - Iron Sword: Cannot exceed 1 per slot
+  - Wood: Cannot exceed 99 per slot  
+  - Leather Armor: Cannot exceed 1 per slot
+- ✅ Drag & drop operations update ECS data correctly with stack validation
+- ✅ Change events propagate correctly
+- ✅ Keyboard controls update UI through ECS with SubScene validation:
+  - Press '1': Add health potion to slot 0 (max 10 stack, validated against SubScene ItemData)
+  - Press '2': Add iron sword to slot 1 (max 1 stack, validated against SubScene ItemData)
+  - Press '3': Add 5 wood to slot 2 (max 99 stack, validated against SubScene ItemData)
+  - Press '4': Add leather armor to slot 3 (max 1 stack, validated against SubScene ItemData)
+  - Press '5': Clear entire inventory (via ECS)
+  - Press '6': Fill with test items (via ECS with proper stack limits)
+
+FINAL SUCCESS CRITERIA:
+=======================
+- ✅ Complete DOTS inventory system with hybrid SubScene authoring architecture
+- ✅ SubScene ItemDataAuthoring components properly configured and baking into ECS entities
+- ✅ Runtime inventory entity creation with SubScene ItemData validation
+- ✅ Seamless ECS-UI integration with real-time synchronization via InventoryUIBridge
+- ✅ Max stack size validation enforced from SubScene ItemData configurations
+- ✅ Scalable to thousands of items and multiple inventories
+- ✅ Performance-optimized with ECS systems handling data and SubScene baking
+- ✅ Maintainable code with clear separation: UI (MonoBehaviour) ↔ Data (ECS SubScene)
+- ✅ Production-ready foundation for larger game systems
+- ✅ Event-driven architecture with proper SubScene-to-runtime data flow
+- ✅ Full drag & drop functionality integrated with ECS and SubScene validation
+
+ARCHITECTURE SUMMARY:
+====================
+- **Main Scene**: UI rendering, InventoryUIBridge, InventoryDataUpdater, user interaction
+- **SubScene**: ItemDataAuthoring GameObjects that bake into ECS ItemData entities
+- **Hybrid Approach**: Runtime inventory entity + SubScene ItemData validation
+- **Bridge Pattern**: InventoryUIBridge provides clean UI-ECS communication
+- **Authoring Workflow**: GameObject authoring components → SubScene baking → ECS entities
+- **Data Validation**: All operations validated against SubScene ItemData configurations
+- **Event-Driven**: All changes propagate through ECS event system
+- **Real-Time Sync**: UI always reflects current ECS data state with SubScene validation
+- **Scalable Design**: SubScene baking + ECS performance for large inventories
+
+This represents a complete, production-ready DOTS inventory system with SubScene
+authoring that demonstrates modern Unity development practices, hybrid
+ECS-MonoBehaviour architecture, and proper DOTS SubScene utilization patterns.

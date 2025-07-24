@@ -1,0 +1,184 @@
+UNITY SCENE HIERARCHY - AFTER EXERCISE 4
+=========================================
+Scene state after completing Exercise 4: Drag & Drop System
+
+📁 SampleScene
+├── 📷 Main Camera
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🔆 Directional Light
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🎮 EventSystem
+│   └── 🔧 Components: [Same as previous exercises]
+│
+├── 🎛️ Manager
+│   ├── 🔧 Components: [Same as Exercise 3]
+│   │
+│   └── 📜 SlotStateManager Script (ENHANCED)
+│       ├── Slot Management: [Same as Exercise 3]
+│       ├── Test Items: [Same as Exercise 3]
+│       └── NEW METHODS:
+│           └── TestDragAndDrop() - Sets up test scenario for drag & drop
+│
+├── 📱 InventoryCanvas
+│   ├── 🔧 Components: [Same as previous exercises]
+│   ├── 📜 InventoryUIManager Script: [Same as previous exercises]
+│   │
+│   └── 📦 InventoryPanel (Disabled by default - toggled by InventoryUIManager)
+│       ├── 🔧 Components: [Same as previous exercises]
+│       ├── ❌ CloseButton: [Same as previous exercises]
+│       │
+│       └── 📊 GridContainer
+│           ├── 🔧 Components: [Same as Exercise 3]
+│           ├── 📜 InventoryGridManager Script: [Same as Exercise 3]
+│           │
+│           ├── 🔲 Slot_0_0 (DRAG & DROP ENABLED)
+│           │   ├── 🔧 Components:
+│           │   │   ├── RectTransform: [Same as Exercise 3]
+│           │   │   ├── Image (Background): [Same as Exercise 3]
+│           │   │   ├── Button: [Same as Exercise 3]
+│           │   │   ├── CanvasGroup (Enhanced for drag operations)
+│           │   │   │   ├── Alpha: 1.0 (becomes 0.6 during drag)
+│           │   │   │   ├── Interactable: true
+│           │   │   │   └── Blocks Raycasts: true (becomes false during drag)
+│           │   │   └── SlotIndex: [Same as Exercise 3]
+│           │   │
+│           │   ├── 📜 ItemSlotUI Script (FULLY ENHANCED WITH DRAG & DROP)
+│           │   │   ├── Slot Configuration: [Same as Exercise 3]
+│           │   │   ├── Visual Components: [Same as Exercise 3]
+│           │   │   ├── State Colors: [Same as Exercise 3]
+│           │   │   ├── Item Data: [Same as Exercise 3]
+│           │   │   ├── Drag Settings: [Same as Exercise 3]
+│           │   │   │
+│           │   │   ├── NEW DRAG & DROP INTERFACES:
+│           │   │   │   ├── IPointerEnterHandler - Mouse enter detection
+│           │   │   │   ├── IPointerExitHandler - Mouse exit detection
+│           │   │   │   ├── IPointerClickHandler - Click handling
+│           │   │   │   ├── IBeginDragHandler - Start drag operation
+│           │   │   │   ├── IDragHandler - During drag movement
+│           │   │   │   └── IEndDragHandler - End drag operation
+│           │   │   │
+│           │   │   ├── NEW DRAG METHODS:
+│           │   │   │   ├── OnBeginDrag() - Reduces opacity, stores position
+│           │   │   │   ├── OnDrag() - Moves item with mouse cursor
+│           │   │   │   ├── OnEndDrag() - Restores position, handles drop
+│           │   │   │   └── HandleDrop() - Processes move/stack/swap logic
+│           │   │   │
+│           │   │   └── NEW FUNCTIONALITY:
+│           │   │       ├── CanAcceptItem() - Validates if item can be placed
+│           │   │       ├── GetAvailableStackSpace() - Calculates stack room
+│           │   │       └── IsDragging() - Returns current drag state
+│           │   │
+│           │   ├── 🖼️ ItemImage: [Same as Exercise 3]
+│           │   ├── 📝 StackCount: [Same as Exercise 3]
+│           │   └── ✨ Highlight: [Same as Exercise 3]
+│           │
+│           ├── 🔲 Slot_1_0 (DRAG & DROP ENABLED)
+│           │   └── 🔧 Components: [Same enhanced structure as Slot_0_0]
+│           │       ├── Full drag & drop functionality
+│           │       ├── ItemSlotUI Script with all interfaces
+│           │       └── Slot Index: 1
+│           │
+│           ├── 🔲 Slot_2_0 (DRAG & DROP ENABLED)
+│           │   └── 🔧 Components: [Same enhanced structure]
+│           │       └── Slot Index: 2
+│           │
+│           └── ... (All 50 slots now have full drag & drop functionality)
+│               ├── Each slot implements all drag interfaces
+│               ├── Each slot can be dragged with visual feedback
+│               ├── Each slot can accept dropped items
+│               ├── Each slot handles move/stack/swap operations
+│               └── Each slot has proper collision detection
+│
+└── 📂 InventorySubScene
+    └── 🔧 Components: [Same as previous exercises - still empty]
+
+DRAG & DROP SYSTEM DETAILS:
+===========================
+
+DRAG OPERATION FLOW:
+1. OnBeginDrag():
+   - Store original position
+   - Set opacity to 60% (dragAlpha = 0.6)
+   - Disable raycasts (blocksRaycasts = false)
+   - Set isDragging = true
+
+2. OnDrag():
+   - Move slot to follow mouse cursor
+   - Item visually follows mouse movement
+
+3. OnEndDrag():
+   - Restore original position
+   - Restore full opacity (alpha = 1.0)
+   - Re-enable raycasts (blocksRaycasts = true)
+   - Process drop logic
+   - Set isDragging = false
+
+DROP VALIDATION LOGIC:
+1. Empty Target Slot:
+   - Move item completely to target slot
+   - Clear source slot
+
+2. Same Item Type (Stacking):
+   - Calculate available stack space
+   - Move items up to maximum stack size
+   - Update stack counts appropriately
+   - Clear source if all items moved
+
+3. Different Item Type (Swapping):
+   - Exchange items between slots
+   - Preserve stack counts
+   - Update both slots simultaneously
+
+TESTING FUNCTIONALITY:
+======================
+After Exercise 4, the following should work:
+- ✅ All previous exercise functionality still works
+- ✅ Items can be dragged with smooth visual feedback (60% opacity)
+- ✅ Empty slots accept any item (move operation)
+- ✅ Same items stack up to maximum (health potions stack to 10)
+- ✅ Different items swap positions (sword ↔ armor)
+- ✅ Dragged items follow mouse cursor precisely
+- ✅ Items return to original position after drop
+- ✅ Keyboard shortcuts work:
+  - Press '1': Add basic test items
+  - Press '2': Test stackable items (5 health potions)
+  - Press '3': Clear all slots
+  - Press '4': Set up drag & drop test scenario
+
+EXERCISE 4 SUCCESS CRITERIA:
+============================
+- ✅ Items can be dragged with smooth visual feedback (60% opacity)
+- ✅ Empty slots accept any item (move operation)
+- ✅ Same items stack up to maximum (health potions stack to 10)
+- ✅ Different items swap positions (sword ↔ armor)
+- ✅ Dragged items follow mouse cursor
+- ✅ Items return to original position after drop
+- ✅ Keyboard shortcuts work (1-4 keys for testing)
+- ✅ No visual glitches during drag operations
+- ✅ Proper collision detection between slots
+
+DRAG & DROP TEST SCENARIOS:
+===========================
+Press '4' key to set up test scenario:
+- Slot 0: Health Potion (for stacking test)
+- Slot 1: Health Potion (drag onto slot 0 to stack)
+- Slot 2: Iron Sword (for swapping test)
+- Slot 3: Leather Armor (drag onto slot 2 to swap)
+- Slot 4: Wood (drag to empty slot to move)
+
+VISUAL FEEDBACK STATES:
+=======================
+- Normal: 100% opacity, full raycasts
+- Dragging: 60% opacity, no raycasts, follows mouse
+- Drop Target: Normal appearance, accepts raycasts
+- After Drop: Returns to original position, full opacity restored
+
+TECHNICAL IMPLEMENTATION:
+=========================
+- Uses Unity's EventSystem interfaces for drag detection
+- CanvasGroup component manages opacity and raycast blocking
+- RectTransform position manipulation for visual dragging
+- PointerEventData for drop target detection
+- Proper cleanup and position restoration after drag operations
